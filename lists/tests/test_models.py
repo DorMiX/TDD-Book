@@ -5,7 +5,7 @@ from django.core.exceptions import ValidationError
 # Create your tests here.
 
 
-class ListAndItemModelsTest(TestCase):
+class ItemModelsTest(TestCase):
     """Item model test."""
 
     def test_default_text(self):
