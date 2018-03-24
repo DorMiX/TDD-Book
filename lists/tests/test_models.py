@@ -5,49 +5,21 @@ from django.core.exceptions import ValidationError
 # Create your tests here.
 
 
-class ItemModelsTest(TestCase):
-    """Item model test."""
+class ListAndItemModelsTest(TestCase):
+    """List and Item models test."""
 
     def test_default_text(self):
+        """Test default text."""
         item = Item()
         self.assertEqual(item.text, '')
 
     def test_item_is_related_to_list(self):
+        """Test item is telated to list."""
         list_ = List.objects.create()
         item = Item()
         item.list = list_
         item.save()
         self.assertIn(item, list_.item_set.all())
-
-    def test_saving_and_retrieving_items(self):
-        """Test saving and retrieving items."""
-        list_ = List()
-        list_.save()
-
-        first_item = Item()
-        first_item.text = 'The first (ever) list item'
-        first_item.list = list_
-        first_item.save()
-
-        second_item = Item()
-        second_item.text = 'Item the second'
-        second_item.list = list_
-        second_item.save()
-
-        saved_list = List.objects.first()
-        self.assertEqual(saved_list, list_)
-
-        saved_items = Item.objects.all()
-        self.assertEqual(saved_items.count(), 2)
-
-        first_saved_item = saved_items[0]
-        # print(first_saved_item.text)
-        second_saved_item = saved_items[1]
-        # print(second_saved_item.text)
-        self.assertEqual(first_saved_item.text, 'The first (ever) list item')
-        self.assertEqual(first_saved_item.list, list_)
-        self.assertEqual(second_saved_item.text, 'Item the second')
-        self.assertEqual(second_saved_item.list, list_)
 
     def test_cannot_save_empty_list_items(self):
         """Test cannot save empty lit items to DB."""
@@ -71,7 +43,7 @@ class ItemModelsTest(TestCase):
             item.full_clean()
 
     def test_CAN_save_same_item_to_different_lists(self):
-        """Test CAN ave same item to different lists."""
+        """Test CAN save same item to different lists."""
         list1 = List.objects.create()
         list2 = List.objects.create()
         Item.objects.create(list=list1, text='bla')
@@ -88,3 +60,8 @@ class ItemModelsTest(TestCase):
             list(Item.objects.all()),
             [item1, item2, item3]
         )
+
+    def test_string_representation(self):
+        """Test string representation."""
+        item = Item(text='some text')
+        self.assertEqual(str(item), 'some text')
