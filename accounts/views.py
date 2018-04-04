@@ -7,7 +7,7 @@ from django.core.mail import send_mail
 def send_login_email(request):
     """Send login email."""
     email = request.POST['email']
-    print(type(send_mail))
+    # print(type(send_mail))
     send_mail(
         'Your login link for Superlists',
         'body text tbc',
