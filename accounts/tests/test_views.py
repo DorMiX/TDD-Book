@@ -1,6 +1,7 @@
 from django.test import TestCase
 import accounts.views
 
+
 class SendLoginEmailViewTest(TestCase):
     """Send Login Email View Test."""
 
