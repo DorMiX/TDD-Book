@@ -13,6 +13,7 @@ class SendLoginEmailViewTest(TestCase):
         self.assertRedirects(response, '/')
 
     def test_sends_mail_to_address_from_post(self):
+        """Test sends mail to address from post."""
         self.send_mail_called = False
 
         def fake_send_mail(subject, body, from_email, to_list):
