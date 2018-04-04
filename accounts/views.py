@@ -11,7 +11,7 @@ def send_login_email(request):
     # print(type(send_mail))
     send_mail(
         'Your login link for Superlists',
-        'body text tbc',
+        'Use this link to log in',
         'noreply@superlists',
         [email],
     )
