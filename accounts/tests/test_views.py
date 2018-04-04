@@ -26,6 +26,7 @@ class SendLoginEmailViewTest(TestCase):
         self.assertEqual(to_list, ['edith@example.com'])
 
     def test_adds_success_message(self):
+        """Test adds success message."""
         response = self.client.post('/accounts/send_login_email', data={
             'email': 'edith@example.com'
         }, follow=True)
