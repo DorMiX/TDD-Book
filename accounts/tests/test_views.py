@@ -1,5 +1,5 @@
 from django.test import TestCase
-
+import accounts.views
 
 class SendLoginEmailViewTest(TestCase):
     """Send Login Email View Test."""
@@ -26,7 +26,6 @@ class SendLoginEmailViewTest(TestCase):
         self.client.post('/accounts/send_login_email', data={
             'email': 'edith@example.com'
         })
-
 
         self.assertTrue(self.send_mail_called)
         self.assertEqual(self.subject, 'Your login link for Superlists')
