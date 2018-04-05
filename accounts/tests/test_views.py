@@ -58,6 +58,7 @@ class LoginViewTest(TestCase):
         )
 
     def test_calls_auth_login_with_user_if_there_is_one(self, mock_auth):
+        """Test calls auth login with user if there is one."""
         response = self.client.get('/accounts/login?token=abcd123')
         self.assertEqual(
             mock_auth.login.call_args,
@@ -69,23 +70,3 @@ class LoginViewTest(TestCase):
         mock_auth.authenticate.return_value = None
         self.client.get('/accounts/login?token=abcd123')
         self.assertEqual(mock_auth.login.called, False)
-
-    def test_creates_token_associated_with_email(self):
-        """Test creates token associated with email."""
-        self.client.post('/accounts/send_login_email', data={
-            'email': 'edith@example.com'
-        })
-        token = Token.objects.first()
-        self.assertEqual(token.email, 'edith@example.com')
-
-    @patch('accounts.views.send_mail')
-    def test_sends_link_to_login_using_token_uid(self, mock_send_mail):
-        """Test sends link to login using token UID."""
-        self.client.post('/accounts/send_login_email', data={
-            'email': 'edith@example.com'
-        })
-
-        token = Token.objects.first()
-        expected_url = f'http://testserver/accounts/login?token={token.uid}'
-        (subject, body, from_email, to_list), kwargs = mock_send_mail.call_args
-        self.assertIn(expected_url, body)
