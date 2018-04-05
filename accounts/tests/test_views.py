@@ -1,5 +1,5 @@
 from django.test import TestCase
-from unittest.mock import patch
+from unittest.mock import patch, call
 from accounts.models import Token
 
 
@@ -47,6 +47,15 @@ class LoginViewTest(TestCase):
         """Test redirects to home page."""
         response = self.client.get('/accounts/login?token=abcd123')
         self.assertRedirects(response, '/')
+
+    @patch('accounts.views.auth')
+    def test_calls_authenticate_with_uid_from_get_request(self, mock_auth):
+        """Test calls authenticate with uid from get request."""
+        self.client.get('/accounts/login?token=abcd123')
+        self.assertEqual(
+            mock_auth.authenticate.call_args,
+            call(uid='abcd123')
+        )
 
     def test_creates_token_associated_with_email(self):
         """Test creates token associated with email."""
