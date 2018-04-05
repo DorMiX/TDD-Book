@@ -40,15 +40,15 @@ class SendLoginEmailViewTest(TestCase):
         self.assertEqual(message.tags, "success")
 
 
+@patch('accounts.views.auth')
 class LoginViewTest(TestCase):
     """Login View Test."""
 
-    def test_redirects_to_home_page(self):
+    def test_redirects_to_home_page(self, mock_auth):
         """Test redirects to home page."""
         response = self.client.get('/accounts/login?token=abcd123')
         self.assertRedirects(response, '/')
 
-    @patch('accounts.views.auth')
     def test_calls_authenticate_with_uid_from_get_request(self, mock_auth):
         """Test calls authenticate with uid from get request."""
         self.client.get('/accounts/login?token=abcd123')
@@ -57,13 +57,18 @@ class LoginViewTest(TestCase):
             call(uid='abcd123')
         )
 
-    @patch('accounts.views.auth')
     def test_calls_auth_login_with_user_if_there_is_one(self, mock_auth):
         response = self.client.get('/accounts/login?token=abcd123')
         self.assertEqual(
             mock_auth.login.call_args,
             call(response.wsgi_request, mock_auth.authenticate.return_value)
         )
+
+    def test_does_not_login_if_user_is_not_authenticated(self, mock_auth):
+        """Test does not login if user is not authenticated."""
+        mock_auth.authenticate.return_value = None
+        self.client.get('/accounts/login?token=abcd123')
+        self.assertEqual(mock_auth.login.called, False)
 
     def test_creates_token_associated_with_email(self):
         """Test creates token associated with email."""
