@@ -8,6 +8,7 @@ MAX_WAIT = 10
 
 
 def wait(fn):
+    """Wait decorators."""
     def modified_fn(*args, **kwargs):
         start_time = time.time()
         while True:
